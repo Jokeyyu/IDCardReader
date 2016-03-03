@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackgroud">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorMenuTop"
+        android:orientation="horizontal"
+        android:layout_marginTop="2dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="公司成员列表"
+            android:textSize="18dp"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="10"/>
+
+        <ImageView
+            android:id="@+id/img_back_ViewM"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_horizontal"
+            android:paddingRight="20dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TableLayout
+            android:id="@+id/table_memberList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0,1"
+            android:shrinkColumns="0,1">
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="用户名"
+                    android:padding="10dp"
+                    android:background="@color/colorWhite"
+                    android:gravity="center" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="密码"
+                    android:padding="10dp"
+                    android:background="@color/colorWhite"
+                    android:gravity="center" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="手机号码"
+                    android:padding="10dp"
+                    android:background="@color/colorWhite"
+                    android:gravity="center" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+</LinearLayout>

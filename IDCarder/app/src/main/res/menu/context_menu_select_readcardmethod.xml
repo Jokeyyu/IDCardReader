@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item android:id="@+id/menu_bt_readCard" android:title="@string/bt"/>
+        <item android:id="@+id/menu_otg_readCard" android:title="@string/otg"/>
+        <item android:id="@+id/menu_nfc_readCard" android:title="@string/nfc"/>
+    </group>
+</menu>

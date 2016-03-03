@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="selectLogin">
+        <item>用户名</item>
+        <item>手机号</item>
+    </string-array>
+</resources>

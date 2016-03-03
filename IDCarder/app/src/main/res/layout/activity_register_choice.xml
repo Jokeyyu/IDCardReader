@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorMenuTop"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title"
+            android:textSize="18dp"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"/>
+        <ImageView
+            android:id="@+id/img_backRChoice"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_horizontal"
+            android:paddingRight="20dp" />
+    </LinearLayout>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackgroud"
+            android:layout_weight="1">
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_enterprise"
+                        android:layout_width="fill_parent"
+                        android:layout_height="150dp"
+                        android:text="企业用户注册"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18dp"
+                        android:background="@drawable/txt_could_change"/>
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/txt_personal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="150dp"
+                        android:text="个人用户注册"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18dp"
+                        android:background="@drawable/txt_could_change"/>
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
