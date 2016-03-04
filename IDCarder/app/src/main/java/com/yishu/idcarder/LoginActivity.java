@@ -221,4 +221,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         txt_forgetPassword.setOnClickListener(this);
 //        btn_find.setOnClickListener(this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "Destroy()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG, "Stop()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume()");
+    }
 }

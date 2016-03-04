@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 //import android.nfc.NdefMessage;
@@ -25,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.otg.idcard.OTGReadCardAPI;
-
 import java.util.ArrayList;
 
 /**
@@ -68,6 +68,7 @@ public class NFCActivity extends Activity
     private String[][] mTechLists;
     public static final int MESSAGE_VALID_NFCBUTTON=16;
     public static NFCActivity instance = null;
+    private long time_use;
 
 
 //    public NFCActivity(Context context, OTGReadCardAPI readCardAPI)
@@ -82,13 +83,13 @@ public class NFCActivity extends Activity
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.fragment_nfc);
         setContentView(R.layout.fragment_idcard_reader);
-
         mContext = getApplicationContext();
         instance = this;
         spHelper = new SPHelper(mContext);
 
         myDBHelper = new MyDBHelper(mContext, "idCardReader.db", null, 1);
         dbUtils = new SQLiteDatabaseUtils(myDBHelper);
+
 
 //        txt_select_readCardMethod = (TextView) findViewById(R.id.txt_select_readCardMethod);
 //        txt_select_readCardMethod.setText("您在正在NFC读卡页面");
@@ -136,6 +137,7 @@ public class NFCActivity extends Activity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        time_use = getTime();
         nfcIntent = intent;
 //        Toast.makeText(mContext, "读卡中，请不要移动身份证...", Toast.LENGTH_LONG).show();
 //        txt_select_readCardMethod.setText("000");
@@ -244,7 +246,7 @@ public class NFCActivity extends Activity
     {
 //        idCardInfo = new IDCardInfo();
         int tt = readCardAPI.NfcReadCard(intent);
-//        Log.e(TAG, intent.getAction() + " " + tt);
+        Log.e(TAG, intent.getAction() + " " + tt);
         if (tt == 2) {
             Toast.makeText(mContext, "接收数据超时！",Toast.LENGTH_LONG).show();
 //            new AlertDialog.Builder(this)
@@ -287,12 +289,14 @@ public class NFCActivity extends Activity
             txt_idcardLifecycle_value.setText(readCardAPI.Activity());
             img_head.setImageBitmap(Bytes2Bimap(readCardAPI.GetImage()));
 
+            time_use = System.currentTimeMillis() - time_use;
+
 //            myDBHelper = new MyDBHelper(mContext, "idCardReader.db", null, 1);
 //            dbUtils = new SQLiteDatabaseUtils(myDBHelper);
 
 //            Log.e(TAG, spHelper.getUsername());
             dbUtils.reduceMoney(spHelper.getUsername());
-            Toast.makeText(mContext, "刷卡成功，消费1元", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "刷卡成功，消费1元 " + time_use, Toast.LENGTH_LONG).show();
 
             Log.e(TAG, readCardAPI.Name());
         }
@@ -342,5 +346,12 @@ public class NFCActivity extends Activity
         txt_idcardLifecycle_value.setText("");
 //        img_head.setImageBitmap(null);
         img_head.setImageResource(R.drawable.head1);
+    }
+
+    private long getTime()
+    {
+        long time;
+        time = System.currentTimeMillis();
+        return time;
     }
 }

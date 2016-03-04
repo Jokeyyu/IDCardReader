@@ -25,4 +25,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile files('libs/ysidcard.jar')
+//    compile(name:'nfcidreader-debug2',ext:'aar')
+}
+
+repositories {
+    flatDir {
+        dirs 'libs' //this way we can find the .aar file in libs folder
+    }
 }
