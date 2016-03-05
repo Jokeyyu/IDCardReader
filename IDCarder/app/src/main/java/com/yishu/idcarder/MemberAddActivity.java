@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,14 +21,11 @@ public class MemberAddActivity extends AppCompatActivity implements View.OnClick
     private SPHelper spHelper;
     private SQLiteDatabaseUtils dbUtils;
     private ImageView img_back_addMember;
-    private EditText edit_username_addM;
-    private EditText edit_password_addM;
-    private EditText edit_password_verify_addM;
-    private EditText edit_phoneNumber_addM;
+    private EditText edit_usernameOrPhoneNumber_addM;
+
     private Button btn_submit_addM;
 
-    private String username, password, password_verify;
-    private String phoneNumber, affiliate;
+    private String usernameOrPhoneNumber, affiliate;
     private Users user;
     private static final String TAG = "===MemberAddActivity===";
     @Override
@@ -54,68 +52,60 @@ public class MemberAddActivity extends AppCompatActivity implements View.OnClick
             }
             case R.id.btn_submit_addM :
             {
-                username = edit_username_addM.getText().toString();
-                password = edit_password_addM.getText().toString();
-                password_verify = edit_password_verify_addM.getText().toString();
-                phoneNumber = edit_phoneNumber_addM.getText().toString();
+                usernameOrPhoneNumber = edit_usernameOrPhoneNumber_addM.getText().toString();
 
                 dbUtils = new SQLiteDatabaseUtils(myDBHelper);
                 user = new Users();
                 user = dbUtils.find(spHelper.getUsername());
                 affiliate = user.getEnterprise_name();
 
-                if (!username.equals("") && !password.equals("") && !password_verify.equals("") && !phoneNumber.equals("") )
+                if (!usernameOrPhoneNumber.equals(""))
                 {
-                    if (!dbUtils.isRegistered("username", username))
+                    user = dbUtils.find(usernameOrPhoneNumber);
+                    if (user == null)
                     {
-                        if (!dbUtils.isRegistered("phone_number", phoneNumber))
+                        user = dbUtils.findByPhone(usernameOrPhoneNumber);
+                        if (user == null)
                         {
-                            if (username.length() >= 2)
+                            showWindowTips("用户名或手机未注册，请先注册");
+                        }
+                        else if (user != null && !user.getAffiliate().equals(dbUtils.find(spHelper.getUsername()).getEnterprise_name()))
+                        {
+                            if (usernameOrPhoneNumber.equals(dbUtils.find(spHelper.getUsername()).getPhone_number()))
                             {
-                                if ( phoneNumber.length() == 11)
-                                {
-                                    if (password.length() >= 6)
-                                    {
-                                        if (password.equals(password_verify))
-                                        {
-                                            user = new Users(username, password, phoneNumber, 0, "2", "/", affiliate); //2 for enterprise added member users
-                                            dbUtils.save(user);
-                                            Toast.makeText(mContext, username + " 添加成功", Toast.LENGTH_LONG).show();
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(mContext, "两次输入的密码不一致", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(mContext, "密码不能少于6个字符", Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                                else
-                                {
-                                    Toast.makeText(mContext, "请输入正确的手机号码", Toast.LENGTH_LONG).show();
-                                }
-
+                                showWindowTips("不能添加管理员本人");
                             }
                             else
                             {
-                                Toast.makeText(mContext, "用户名不能少于2个字符", Toast.LENGTH_LONG).show();
+                                dbUtils.changeInfo("affiliate", affiliate, user.getUsername());
+                                showWindowTips("添加成功");
                             }
                         }
                         else
                         {
-                            Toast.makeText(mContext, "手机号已注册", Toast.LENGTH_LONG).show();
+                            showWindowTips(user.getPhone_number() + "已是本公司成员");
+                        }
+                    }
+                    else if (user != null && !user.getAffiliate().equals(dbUtils.find(spHelper.getUsername()).getEnterprise_name()))
+                    {
+                        if (usernameOrPhoneNumber.equals(spHelper.getUsername()))
+                        {
+                            showWindowTips("不能添加管理员本人");
+                        }
+                        else
+                        {
+                            dbUtils.changeInfo("affiliate", affiliate, user.getUsername());
+                            showWindowTips("添加成功");
                         }
                     }
                     else
                     {
-                        Toast.makeText(mContext, "用户名已注册", Toast.LENGTH_LONG).show();
+                        showWindowTips(user.getUsername() + "已是本公司成员");
                     }
                 }
                 else
                 {
-                    Toast.makeText(mContext, "注册信息不完整，请重新注册", Toast.LENGTH_LONG).show();
+                    showWindowTips("请输入用户名或手机");
                 }
                 break;
             }
@@ -125,13 +115,15 @@ public class MemberAddActivity extends AppCompatActivity implements View.OnClick
     private void bindViews()
     {
         img_back_addMember = (ImageView) findViewById(R.id.img_back_addMember);
-        edit_username_addM = (EditText) findViewById(R.id.edit_username_addM);
-        edit_password_addM = (EditText) findViewById(R.id.edit_password_addM);
-        edit_password_verify_addM = (EditText) findViewById(R.id.edit_password_verify_addM);
-        edit_phoneNumber_addM = (EditText) findViewById(R.id.edit_phoneNumber_addM);
+        edit_usernameOrPhoneNumber_addM = (EditText) findViewById(R.id.edit_usernameOrPhoneNumber_addM);
         btn_submit_addM = (Button) findViewById(R.id.btn_submit_addM);
 
         img_back_addMember.setOnClickListener(this);
         btn_submit_addM.setOnClickListener(this);
+    }
+
+    private void showWindowTips(String tips)
+    {
+        Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
     }
 }
