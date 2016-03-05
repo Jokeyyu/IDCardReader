@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -32,23 +34,13 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
     private SPHelper spHelper;
     private SQLiteDatabaseUtils dbUtils;
     private ImageView img_back_ViewM;
-    private EditText edit_username_addM;
-    private EditText edit_password_addM;
-    private EditText edit_password_verify_addM;
-    private EditText edit_phoneNumber_addM;
-    private Button btn_submit_addM;
-    private TableLayout table_memberList;
-    private TableRow tableRow_memberInfo;
-    private TextView txt_username, txt_password, txt_phoneNumber;
-    private Drawable attr1;
+    private LinearLayout member_list;
+    private TextView txt_username;
+    private TextView txt_line;
 
-    private String username, password, password_verify;
-    private String phoneNumber, affiliate;
     private Users user;
     private List<Users> enterpriseMembers;
     private static final String TAG = "===MemberViewActivity==";
-    private static final int MARGIN_LEFT_NOT_FIRST_CELL = 0;
-    private static final int MARGIN_LEFT_FIRST_CELL = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +81,7 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
     private void bindViews()
     {
         img_back_ViewM = (ImageView) findViewById(R.id.img_back_ViewM);
-        table_memberList = (TableLayout) findViewById(R.id.table_memberList);
+        member_list = (LinearLayout) findViewById(R.id.member_list);
 
         img_back_ViewM.setOnClickListener(this);
     }
@@ -104,25 +96,31 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
         {
             i++;
             Log.e(TAG, user.getUsername() + i);
-            tableRow_memberInfo = new TableRow(this);
-            tableRow_memberInfo.addView(setTextViewAttrs(txt_username, user.getUsername(), MARGIN_LEFT_FIRST_CELL));
-            tableRow_memberInfo.addView(setTextViewAttrs(txt_password, user.getPassword(), MARGIN_LEFT_NOT_FIRST_CELL));
-            tableRow_memberInfo.addView(setTextViewAttrs(txt_phoneNumber, user.getPhone_number(), MARGIN_LEFT_NOT_FIRST_CELL));
-            table_memberList.addView(tableRow_memberInfo);
+            txt_username = new TextView(this);
+            txt_line = new TextView(this);
+            txt_line = setToLine(txt_line, 1);
+            member_list.addView(setTextViewAttrs(txt_username, user.getUsername()));
+            member_list.addView(txt_line);
         }
+        member_list.removeView(txt_line);
 
     }
-    private TextView setTextViewAttrs(TextView textView, String txtValue, int marginLeft)
+    private TextView setTextViewAttrs(TextView textView, String txtValue)
     {
-        textView = new TextView(this);
         textView.setText(txtValue);
-        textView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        textView.setPadding(0, 20, 0, 20);
-        textView.setGravity(Gravity.CENTER);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        lp.setMargins(marginLeft, 2, 0, 0);
+        textView.setPadding(0, 30, 0, 30);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( //
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         textView.setLayoutParams(lp);
 
+        return textView;
+    }
+    private TextView setToLine(TextView textView, int height)
+    {
+        textView.setBackgroundColor(Color.parseColor("#b5b5b5"));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( //
+                LinearLayout.LayoutParams.MATCH_PARENT, height);
+        textView.setLayoutParams(lp);
         return textView;
     }
 }
