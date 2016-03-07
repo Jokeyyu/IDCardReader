@@ -7,6 +7,8 @@
     <!--<color name="colorButton">#eeeeee</color>-->
     <color name="colorButton">#6fae3b</color>
     <color name="colorButtonPressed">#68a437</color>
+    <color name="colorButton_style2">#6fae3b</color>
+    <color name="colorButtonPressed_style2">#68a437</color>
     <color name="colorTXTPressed">#f3f3f3</color>
     <color name="colorLogo">#d2d2d2</color>
     <color name="colorUserTag">#d2d2d2</color>
@@ -21,8 +23,17 @@
     <color name="colorDataBigLine">#b5b5b5</color>
     <!--<color name="colorBackgroud">#ebebeb</color>-->
     <color name="colorBackgroud">#93c669</color>
+    <color name="colorBackground_nfc">#f5f5f5</color>
     <color name="colorLine">#c7db5e</color>
+    <color name="colorHint">#d7d7d7</color>
+    <color name="colorLineGray">#b5b5b5</color>
+    <color name="colorLineBig">#d7d7d7</color>
     <color name="colorRed">#ff0000</color>
+    <color name="colorTitle_black">#626262</color>
+    <color name="colorTitle_orange">#ce610f</color>
+    <color name="colorEditText">#626262</color>
+    <color name="colorEditText_unfocused">#d7d7d7</color>
+    <color name="colorEditText_Cursor">#ff0000</color>
 
 
 

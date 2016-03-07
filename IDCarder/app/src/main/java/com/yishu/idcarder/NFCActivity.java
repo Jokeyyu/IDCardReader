@@ -18,6 +18,7 @@ import android.os.Message;
 //import android.os.Parcelable;
 //import android.support.v7.app.AppCompatActivity;
 //import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/1/26.
  */
-public class NFCActivity extends Activity
+public class NFCActivity extends AppCompatActivity
 {
     private NfcAdapter nfcAdapter = null;
     private Context mContext;
@@ -143,7 +144,7 @@ public class NFCActivity extends Activity
 //        txt_select_readCardMethod.setText("000");
         user = new Users();
         user = dbUtils.find(spHelper.getUsername());
-        if (user.getMoney() > 1)
+        if (user.getMoney() >= 1)
         {
             txt_nfc_tips.setVisibility(View.VISIBLE);
             cleanText();

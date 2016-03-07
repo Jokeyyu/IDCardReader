@@ -79,6 +79,10 @@
             android:name=".MemberDeleteActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".RechargeActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

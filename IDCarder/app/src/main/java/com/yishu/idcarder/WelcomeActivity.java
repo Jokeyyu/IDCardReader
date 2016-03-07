@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
  */
 public class WelcomeActivity extends AppCompatActivity
 {
-    private long EXIST_TIME = 2000;
+    private long EXIST_TIME = 1000*3;
     private Handler mHandler = new Handler();
     private Context mContext;
     @Override

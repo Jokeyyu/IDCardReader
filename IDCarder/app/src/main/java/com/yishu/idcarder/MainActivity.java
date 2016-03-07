@@ -28,16 +28,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    private ImageView img_home;
     private ImageView img_backM;
     private Button btn_logout;
-    private Button btn_recharge;
+    private TextView txt_recharge;
     private TextView txt_usernameM;
     private TextView txt_money;
     private TextView txt_changePW;
-    private TextView txt_addMember;
     private TextView txt_deleteMember;
     private TextView txt_viewMember;
     private TextView txt_userTag_personalM;
     private TextView txt_userTag_enterpriseM;
-    private EditText edit_money;
     private SPHelper spHelper;
     private SQLiteDatabaseUtils dbUtils;
     private MyDBHelper myDBHelper;
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (user.getTag().equals("0"))
         {
             txt_userTag_enterpriseM.setVisibility(View.VISIBLE);
-            txt_addMember.setVisibility(View.VISIBLE);
             txt_deleteMember.setVisibility(View.VISIBLE);
             txt_viewMember.setVisibility(View.VISIBLE);
         }
@@ -95,11 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        txt_mine = (TextView) findViewById(R.id.txt_mine);
         img_backM = (ImageView) findViewById(R.id.img_backM);
         btn_logout = (Button) findViewById(R.id.btn_logout);
-        edit_money = (EditText) findViewById(R.id.edit_money);
-        btn_recharge = (Button) findViewById(R.id.btn_recharge);
+        txt_recharge = (TextView) findViewById(R.id.txt_recharge);
         txt_money = (TextView) findViewById(R.id.txt_money);
         txt_changePW = (TextView) findViewById(R.id.txt_change_password);
-        txt_addMember = (TextView) findViewById(R.id.txt_addMemberM);
         txt_deleteMember = (TextView) findViewById(R.id.txt_deleteMemberM);
         txt_viewMember = (TextView) findViewById(R.id.txt_viewMemberM);
         txt_userTag_personalM = (TextView) findViewById(R.id.txt_userTag_PersonalM);
@@ -111,9 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         img_backM.setOnClickListener(this);
         btn_logout.setOnClickListener(this);
-        btn_recharge.setOnClickListener(this);
+        txt_recharge.setOnClickListener(this);
         txt_changePW.setOnClickListener(this);
-        txt_addMember.setOnClickListener(this);
         txt_deleteMember.setOnClickListener(this);
         txt_viewMember.setOnClickListener(this);
 //        txt_idCardReader.setOnClickListener(this);
@@ -131,7 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        username = txt_usernameM.getText().toString();
 //        username = spHelper.getUsername();
 //        user = dbUtils.find(username);
-        Log.e(TAG, username + " " + user.getEnterprise_name() + " " + user.getTag() + " " + user.getAffiliate());
+        user = dbUtils.find(username);
+        Log.e(TAG, username + " " + user.getEnterprise_name() + " " + user.getTag() + " " + user.getAffiliate() + " " + user.getMoney());
         txt_money.setText(String.valueOf(user.getMoney()));
     }
 
@@ -157,24 +152,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
             }
-            case R.id.btn_recharge :
+            case R.id.txt_recharge :
             {
-                try
-                {
-                    double money = Double.valueOf(edit_money.getText().toString());
-                    dbUtils.recharge(money, username);
-//                    Log.e(TAG, username + " recharge");
-                    user = dbUtils.find(username);
-                    Log.e(TAG, user.getUsername()+user.getPhone_number() + " recharge");
-                    txt_money.setText(String.valueOf(user.getMoney()));
-                }
-                catch (Exception e)
-                {
-                    Toast.makeText(mContext, "输入格式不正确",Toast.LENGTH_LONG).show();
-                }
-                finally {
-                    edit_money.setText("");
-                }
+                Intent intent = new Intent(mContext, RechargeActivity.class);
+                startActivity(intent);
+//                try
+//                {
+//                    double money = Double.valueOf(edit_money.getText().toString());
+//                    dbUtils.recharge(money, username);
+////                    Log.e(TAG, username + " recharge");
+//                    user = dbUtils.find(username);
+//                    Log.e(TAG, user.getUsername()+user.getPhone_number() + " recharge");
+//                    txt_money.setText(String.valueOf(user.getMoney()));
+//                }
+//                catch (Exception e)
+//                {
+//                    Toast.makeText(mContext, "输入格式不正确",Toast.LENGTH_LONG).show();
+//                }
+//                finally {
+//                    edit_money.setText("");
+//                }
 //                Log.e(TAG, String.valueOf(user.getMoney()) + "recharge");
 
                 break;
@@ -182,12 +179,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.txt_change_password :
             {
                 Intent intent = new Intent(mContext, ChangePWActivity.class);
-                startActivity(intent);
-                break;
-            }
-            case R.id.txt_addMemberM :
-            {
-                Intent intent = new Intent(mContext, MemberAddActivity.class);
                 startActivity(intent);
                 break;
             }

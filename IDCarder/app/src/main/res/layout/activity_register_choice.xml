@@ -3,27 +3,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <LinearLayout
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:background="@color/colorMenuTop"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title"
-            android:textSize="18dp"
-            android:textColor="@color/colorWhite"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"/>
         <ImageView
             android:id="@+id/img_backRChoice"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/back_horizontal"
-            android:paddingRight="20dp" />
+            android:src="@drawable/back_could_change"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_register_choice"
+            android:textSize="18dp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorTitle_orange"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <!--<TextView-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="1px"-->
+            <!--android:background="@color/colorLineGray" />-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="20px"
+            android:background="@color/colorLineBig" />
     </LinearLayout>
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,18 +43,27 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorBackgroud"
-            android:layout_weight="1">
+            android:layout_height="fill_parent">
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
-
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
+                    <TextView
+                        android:id="@+id/txt_personal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="150dp"
+                        android:text="个人用户注册"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18dp"
+                        android:background="@drawable/txt_could_change"/>
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="20px"
+                        android:background="@color/colorLineBig" />
                     <TextView
                         android:id="@+id/txt_enterprise"
                         android:layout_width="fill_parent"
@@ -55,19 +75,8 @@
                         android:background="@drawable/txt_could_change"/>
                     <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:gravity="center"
-                        />
-                    <TextView
-                        android:id="@+id/txt_personal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="150dp"
-                        android:text="个人用户注册"
-                        android:gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="18dp"
-                        android:background="@drawable/txt_could_change"/>
-
+                        android:layout_height="1px"
+                        android:background="@color/colorLineGray" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

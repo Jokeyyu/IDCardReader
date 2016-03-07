@@ -10,7 +10,7 @@
         android:layout_height="48dp"
         android:orientation="horizontal">
         <ImageView
-            android:id="@+id/img_back_addMember"
+            android:id="@+id/img_back_recharge"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:src="@drawable/back_could_change"
@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_manageMember_add"
+            android:text="@string/recharge"
             android:textSize="18dp"
             android:textColor="@color/colorTitle_orange"
             android:layout_centerInParent="true"/>
@@ -38,13 +38,12 @@
         android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
                 android:orientation="vertical"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp">
@@ -56,16 +55,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="成员信息："
+                        android:text="金额："
                         android:paddingTop="15px"
                         android:paddingBottom="15px"/>
 
                     <EditText
-                        android:id="@+id/edit_usernameOrPhoneNumber_addM"
+                        android:id="@+id/edit_money_recharge"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        android:hint="手机号码/用户名"
                         android:singleLine="true"
                         android:background="@drawable/edit_bg"
                         android:textCursorDrawable="@drawable/cursor_style"/>
@@ -76,16 +74,15 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal">
                     <Button
-                        android:id="@+id/btn_submit_addM"
+                        android:id="@+id/btn_submit_recharge"
                         android:layout_width="fill_parent"
                         android:layout_height="35dp"
                         android:background="@drawable/button_could_change"
-                        android:text="添          加"
+                        android:text="充          值"
                         android:layout_marginTop="40dp"
                         android:textColor="@color/colorWhite"/>
                 </LinearLayout>
             </LinearLayout>
-        </RelativeLayout>
-
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

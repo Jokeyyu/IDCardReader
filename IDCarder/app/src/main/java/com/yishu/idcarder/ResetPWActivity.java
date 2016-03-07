@@ -63,38 +63,40 @@ public class ResetPWActivity extends AppCompatActivity implements View.OnClickLi
                 user = new Users();
                 dbUtils = new SQLiteDatabaseUtils(myDBHelper);
                 user = dbUtils.find(username);
-                if (username.equals(user.getUsername()))
+                if (user != null)
                 {
-                    if (phoneNumber.equals(user.getPhone_number()))
+                    if (username.equals(user.getUsername()))
                     {
-                        if (password.equals(password_verify))
+                        if (phoneNumber.equals(user.getPhone_number()))
                         {
-                            Log.e(TAG, "password before reset ===> " + user.getPassword());
-                            dbUtils.changeInfo(PASSWORD, password, username);
+                            if (password.equals(password_verify))
+                            {
+                                Log.e(TAG, "password before reset ===> " + user.getPassword());
+                                dbUtils.changeInfo(PASSWORD, password, username);
 
-                            user = dbUtils.find(username);
-                            Log.e(TAG, "password after reset ===> " + user.getPassword());
+                                user = dbUtils.find(username);
+                                Log.e(TAG, "password after reset ===> " + user.getPassword());
 
-                            Toast.makeText(mContext, "密码重置成功", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(mContext, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
+                                Toast.makeText(mContext, "密码重置成功", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(mContext, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else
+                            {
+                                Toast.makeText(mContext, "两次输入的密码不一致", Toast.LENGTH_LONG).show();
+                            }
                         }
                         else
                         {
-                            Toast.makeText(mContext, "两次输入的密码不一致", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"手机号码有误", Toast.LENGTH_LONG).show();
                         }
-                    }
-                    else
-                    {
-                        Toast.makeText(mContext,"手机号码有误", Toast.LENGTH_LONG).show();
                     }
                 }
                 else
                 {
-                    Toast.makeText(mContext,"用户名不存在", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext,"用户不存在", Toast.LENGTH_LONG).show();
                 }
-
                 break;
             }
         }

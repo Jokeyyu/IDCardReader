@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">测试版身份证读取客户端</string>
+    <string name="app_name">实名认证专家</string>
     <string name="app_versionCode">1</string>
     <string name="app_versionName">测试版1.0</string>
     <string name="action_settings">Settings</string>
@@ -17,8 +17,17 @@
     </string>
     <string name="nfcReadTips">读卡中，请不要移动身份证...</string>
     <string name="title">南京亿数实名查询系统</string>
-    <string name="title_resetPW">南京亿数实名查询系统密码管理</string>
+    <string name="title_login">登    录</string>
+    <string name="title_register_choice">用户注册</string>
+    <string name="title_register_personal">个人用户注册</string>
+    <string name="title_register_enterprise">企业用户注册</string>
+    <string name="title_mine">详细信息</string>
+    <string name="title_nfc">读卡</string>
+    <string name="title_resetPW">修改密码</string>
     <string name="title_manageMember">系统成员管理</string>
+    <string name="title_manageMember_add">添加系统成员</string>
+    <string name="title_manageMember_delete">删除系统成员</string>
     <string name="forget_password"><u>忘记密码?</u></string>
     <string name="getValidateNumber"><u>获取验证码</u></string>
+    <string name="recharge">充值</string>
 </resources>

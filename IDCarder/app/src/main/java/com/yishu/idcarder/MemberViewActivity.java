@@ -1,6 +1,7 @@
 package com.yishu.idcarder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
     private SPHelper spHelper;
     private SQLiteDatabaseUtils dbUtils;
     private ImageView img_back_ViewM;
+    private ImageView img_addMember_list;
     private LinearLayout member_list;
     private TextView txt_username;
     private TextView txt_line;
@@ -75,6 +77,12 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             }
+            case R.id.img_addMember_list :
+            {
+                Intent intent = new Intent(mContext, MemberAddActivity.class);
+                startActivity(intent);
+                break;
+            }
         }
     }
 
@@ -82,8 +90,10 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
     {
         img_back_ViewM = (ImageView) findViewById(R.id.img_back_ViewM);
         member_list = (LinearLayout) findViewById(R.id.member_list);
+        img_addMember_list = (ImageView) findViewById(R.id.img_addMember_list);
 
         img_back_ViewM.setOnClickListener(this);
+        img_addMember_list.setOnClickListener(this);
     }
 
     private void addViewList()
@@ -102,7 +112,7 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
             member_list.addView(setTextViewAttrs(txt_username, user.getUsername()));
             member_list.addView(txt_line);
         }
-        member_list.removeView(txt_line);
+//        member_list.removeView(txt_line);
 
     }
     private TextView setTextViewAttrs(TextView textView, String txtValue)

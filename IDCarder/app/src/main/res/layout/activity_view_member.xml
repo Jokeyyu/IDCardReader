@@ -1,60 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorWhite">
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/layout_line1_MemberList"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:background="@color/colorMenuTop"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="公司成员列表"
-            android:textSize="18dp"
-            android:textColor="@color/colorWhite"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="10"/>
-
+        android:layout_alignParentTop="true">
         <ImageView
             android:id="@+id/img_back_ViewM"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/back_horizontal"
-            android:paddingRight="20dp"/>
+            android:src="@drawable/back_could_change"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="公司成员"
+            android:textSize="18dp"
+            android:textColor="@color/colorTitle_orange"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/layout_line2_MemberList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_line1_MemberList">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/colorLineGray" />
     </LinearLayout>
 
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/member_list"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_line2_MemberList">
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
-            <!--<TextView-->
+            android:layout_height="fill_parent">
+            <LinearLayout
+                android:id="@+id/member_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+                <!--<TextView-->
                 <!--android:layout_width="fill_parent"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:text="James"-->
                 <!--android:paddingTop="10dp"-->
                 <!--android:paddingBottom="10dp" />-->
-            <!--<TextView-->
+                <!--<TextView-->
                 <!--android:layout_width="fill_parent"-->
                 <!--android:layout_height="1px"-->
                 <!--android:background="@color/colorLineGray" />-->
-            <!--<TextView-->
+                <!--<TextView-->
                 <!--android:layout_width="fill_parent"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:text="James"-->
                 <!--android:paddingTop="10dp"-->
                 <!--android:paddingBottom="10dp" />-->
-        </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/colorLineGray" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/img_addMember_list"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/add02"
+                android:background="@drawable/add_could_change"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="添加成员"
+                android:gravity="center"
+                android:textSize="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

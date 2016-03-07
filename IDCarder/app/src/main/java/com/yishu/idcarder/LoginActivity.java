@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,16 +23,17 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/1/21.
  */
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener//, View.OnTouchListener//, AdapterView.OnItemSelectedListener
 {
     private Context mContext;
     private Intent intent;
     private Button btn_login;
     private Button btn_register;
     private TextView txt_forgetPassword;
-    private EditText edit_usernameL;
+//    private EditText edit_usernameL;
+    private EditText edit_usernameOrPhoneNumber_login;
     private EditText edit_passwordL;
-    private Spinner spin_username_phone;
+//    private Spinner spin_username_phone;
     private int spin_position = 0; //0 for using username to login, 1 for using phone number to login.
 
 //    Button btn_find;
@@ -40,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Users user;
     private SPHelper spHelper;
     private Map<String, String > data;
+    private String usernameOrPhoneNumber;
     private static final String TAG = "===LoginActivity===";
 //    private static final int DELAY = 10;
     @Override
@@ -60,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         try
         {
             autoLogin();
-        }catch (Exception e){}
+        }catch (Exception e){Log.e(TAG, "something wrong !!!!!");}
 
     }
     @Override
@@ -68,65 +71,124 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         intent = null;
         switch (v.getId())
         {
-            case R.id.btn_login :
+            case R.id.btn_login : {
+                usernameOrPhoneNumber = edit_usernameOrPhoneNumber_login.getText().toString();
+
+                myDBHelper = new MyDBHelper(mContext, "idCardReader.db", null, 1);
+                dbUtils = new SQLiteDatabaseUtils(myDBHelper);
+                user = new Users();
+                if (!usernameOrPhoneNumber.equals(""))
+                {
+                    user = dbUtils.find(usernameOrPhoneNumber);
+                    if (user == null)
+                    {
+                        user = dbUtils.findByPhone(usernameOrPhoneNumber);
+                        if (user == null) {
+                            showWindowTips("用户名或手机未注册，请先注册");
+                        } else
+                        {
+                            String password = edit_passwordL.getText().toString();
+                            if (usernameOrPhoneNumber.equals(user.getPhone_number()))
+                            {
+                                if (password.equals(user.getPassword()))
+                                {
+                                    intent = new Intent(mContext, NFCActivity.class);
+                                    startActivity(intent);
+                                    spHelper.save(usernameOrPhoneNumber, password);
+                                    finish();
+                                } else
+                                {
+                                    Toast.makeText(mContext, "密码不正确", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        String password = edit_passwordL.getText().toString();
+                        if (usernameOrPhoneNumber.equals(user.getUsername())) {
+                            if (password.equals(user.getPassword())) {
+                                intent = new Intent(mContext, NFCActivity.class);
+                                startActivity(intent);
+                                spHelper.save(usernameOrPhoneNumber, password);
+                                finish();
+                            } else {
+                                Toast.makeText(mContext, "密码不正确", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    showWindowTips("请输入用户名或手机");
+                }
+                break;
+            }
 //                System.out.println("========" + System.getProperty("java.library.path"));
 //                intent = new Intent(mContext, MainActivity.class);
 //                intent = new Intent(mContext, NFCActivity.class);
 //                startActivity(intent);
-                myDBHelper = new MyDBHelper(mContext, "idCardReader.db", null, 1);
-                user = new Users();
-                dbUtils = new SQLiteDatabaseUtils(myDBHelper);
+//                myDBHelper = new MyDBHelper(mContext, "idCardReader.db", null, 1);
+//                user = new Users();
+//                dbUtils = new SQLiteDatabaseUtils(myDBHelper);
 
-                if (spin_position == 0)
-                {
-                    String username = edit_usernameL.getText().toString();
-                    String password = edit_passwordL.getText().toString();
-                    user = dbUtils.find(username);
-                    if (username.equals(user.getUsername()))
-                    {
-                        if (password.equals(user.getPassword()))
-                        {
-                            intent = new Intent(mContext, NFCActivity.class);
-                            startActivity(intent);
-                            spHelper.save(username, password);
-                            finish();
-                        }
-                        else
-                        {
-                            Toast.makeText(mContext,"密码不正确", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else
-                    {
-                        Toast.makeText(mContext,"用户名不存在", Toast.LENGTH_LONG).show();
-                    }
-                }
-                if (spin_position == 1)
-                {
-                    String phoneNumber = edit_usernameL.getText().toString();
-                    String password = edit_passwordL.getText().toString();
-                    user = dbUtils.findByPhone(phoneNumber);
-                    if (phoneNumber.equals(user.getPhone_number()))
-                    {
-                        if (password.equals(user.getPassword()))
-                        {
-                            intent = new Intent(mContext, NFCActivity.class);
-                            startActivity(intent);
-                            spHelper.save(user.getUsername(), password);
-                            finish();
-                        }
-                        else
-                        {
-                            Toast.makeText(mContext,"密码不正确", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else
-                    {
-                        Toast.makeText(mContext,"手机号未注册或有误", Toast.LENGTH_LONG).show();
-                    }
-                }
+//                if (spin_position == 0)
+//                {
+//                    String username = edit_usernameL.getText().toString();
+//                    String password = edit_passwordL.getText().toString();
+//                    user = dbUtils.find(username);
+//                    if(user != null)
+//                    {
+//                        if (username.equals(user.getUsername()))
+//                        {
+//                            if (password.equals(user.getPassword()))
+//                            {
+//                                intent = new Intent(mContext, NFCActivity.class);
+//                                startActivity(intent);
+//                                spHelper.save(username, password);
+//                                finish();
+//                            }
+//                            else
+//                            {
+//                                Toast.makeText(mContext,"密码不正确", Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    }
+//                    else
+//                    {
+//                        Toast.makeText(mContext,"用户名不存在", Toast.LENGTH_LONG).show();
+//                    }
+//
+//
+//                }
+//                if (spin_position == 1)
+//                {
+//                    String phoneNumber = edit_usernameL.getText().toString();
+//                    String password = edit_passwordL.getText().toString();
+//                    user = dbUtils.findByPhone(phoneNumber);
+//                    if(user != null)
+//                    {
+//                        if (phoneNumber.equals(user.getPhone_number()))
+//                        {
+//                            if (password.equals(user.getPassword()))
+//                            {
+//                                intent = new Intent(mContext, NFCActivity.class);
+//                                startActivity(intent);
+//                                spHelper.save(user.getUsername(), password);
+//                                finish();
+//                            }
+//                            else
+//                            {
+//                                Toast.makeText(mContext,"密码不正确", Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    }
+//                    else
+//                    {
+//                        Toast.makeText(mContext,"手机号未注册或有误", Toast.LENGTH_LONG).show();
+//                    }
+//                }
 
-                break;
             case R.id.btn_register :
                 intent = new Intent(mContext, RegisterChoiceActivity.class);
                 startActivity(intent);
@@ -146,38 +208,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-        switch (parent.getId())
-        {
-            case R.id.spin_username_phone :
-            {
-                spin_position = position;
-
-                Log.e(TAG, "item selected ==>" + spin_position);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+//    @Override
+//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+//        switch (parent.getId())
+//        {
+//            case R.id.spin_username_phone :
+//            {
+//                spin_position = position;
+//
+//                Log.e(TAG, "item selected ==>" + spin_position);
+//                break;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> parent) {
+//
+//    }
 
     private void autoLogin()
     {
         data = spHelper.readSP();
         String username = data.get("username");
         String password = data.get("password");
-        edit_usernameL.setText(username);
+        edit_usernameOrPhoneNumber_login.setText(username);
         edit_passwordL.setText(password);
         Log.e(TAG, username);
         myDBHelper = new MyDBHelper(mContext, "idCardReader.db", null, 1);
         user = new Users();
         dbUtils = new SQLiteDatabaseUtils(myDBHelper);
-        user = dbUtils.find(edit_usernameL.getText().toString());
+        user = dbUtils.find(edit_usernameOrPhoneNumber_login.getText().toString());
+        Log.e(TAG, user.getUsername());
         if (username.equals(user.getUsername()) && password.equals(user.getPassword()))
         {
             intent = new Intent(mContext, NFCActivity.class);
@@ -186,7 +249,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         else
         {
-            edit_usernameL.setText("");
+            edit_usernameOrPhoneNumber_login.setText("");
             edit_passwordL.setText("");
         }
     }
@@ -210,14 +273,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_register = (Button) findViewById(R.id.btn_register);
 //        btn_find = (Button) findViewById(R.id.btn_find);
-        edit_usernameL = (EditText) findViewById(R.id.edit_usernameL);
+//        edit_usernameL = (EditText) findViewById(R.id.edit_usernameL);
         edit_passwordL = (EditText) findViewById(R.id.edit_passwordL);
-        spin_username_phone = (Spinner) findViewById(R.id.spin_username_phone);
+//        spin_username_phone = (Spinner) findViewById(R.id.spin_username_phone);
         txt_forgetPassword = (TextView) findViewById(R.id.txt_forgetPassword);
+        edit_usernameOrPhoneNumber_login = (EditText) findViewById(R.id.edit_usernameOrPhoneNumber_login);
 
         btn_login.setOnClickListener(this);
         btn_register.setOnClickListener(this);
-        spin_username_phone.setOnItemSelectedListener(this);
+//        spin_username_phone.setOnItemSelectedListener(this);
         txt_forgetPassword.setOnClickListener(this);
 //        btn_find.setOnClickListener(this);
     }
@@ -239,4 +303,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onResume();
         Log.e(TAG, "onResume()");
     }
+    private void showWindowTips(String tips)
+    {
+        Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
+    }
+
 }
