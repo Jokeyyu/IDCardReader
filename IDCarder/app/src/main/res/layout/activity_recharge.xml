@@ -64,6 +64,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
+                        android:inputType="number"
                         android:singleLine="true"
                         android:background="@drawable/edit_bg"
                         android:textCursorDrawable="@drawable/cursor_style"/>

@@ -22,11 +22,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.otg.idcard.OTGReadCardAPI;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 /**
@@ -44,6 +54,7 @@ public class NFCActivity extends AppCompatActivity
     private TextView txt_nfc_tips;
 //    private ImageView img_backNFC;
     private ImageView img_home;
+    private CheckBox push_data;
 
     private SQLiteDatabaseUtils dbUtils;
     private MyDBHelper myDBHelper;
@@ -59,6 +70,16 @@ public class NFCActivity extends AppCompatActivity
     private TextView txt_idcardNumber_value;
     private TextView txt_idcardDepartment_value;
     private TextView txt_idcardLifecycle_value;
+
+    private EditText edit_usernameOrPhoneNumber_dataPush;
+
+
+//    private ServerSocket serverSocket;
+    private Socket socket = null;
+    private BufferedReader reader;
+    private BufferedWriter writer;
+    private static final String SERVER_IP = "192.168.1.32";
+    private static final int PORT = 3535;
 
 
     private static final String TAG = "=====NFCActivity======";
@@ -103,9 +124,24 @@ public class NFCActivity extends AppCompatActivity
         txt_idcardNumber_value = (TextView) findViewById(R.id.txt_idcardNumber_value);
         txt_idcardDepartment_value = (TextView) findViewById(R.id.txt_idcardDepartment_value);
         txt_idcardLifecycle_value = (TextView) findViewById(R.id.txt_idcardLifecycle_value);
+        push_data = (CheckBox) findViewById(R.id.checkbox_dataPush);
+        edit_usernameOrPhoneNumber_dataPush = (EditText) findViewById(R.id.edit_usernameOrPhoneNumber_dataPush);
 
 
         txt_nfc_tips = (TextView) findViewById(R.id.txt_nfc_tips);
+        push_data.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    edit_usernameOrPhoneNumber_dataPush.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    edit_usernameOrPhoneNumber_dataPush.setVisibility(View.GONE);
+                }
+            }
+        });
 //        img_backNFC = (ImageView) findViewById(R.id.img_backNFC);
 
 //        img_backNFC.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +163,10 @@ public class NFCActivity extends AppCompatActivity
         IPArrayList.add("103.21.119.78");
         IPArrayList.add("103.21.119.78");
         IPArrayList.add("103.21.119.78");
+//        IPArrayList.add("192.168.1.148");
+//        IPArrayList.add("192.168.1.148");
+//        IPArrayList.add("192.168.1.148");
+
         readCardAPI = new OTGReadCardAPI(mContext, IPArrayList);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(mContext);
@@ -299,6 +339,19 @@ public class NFCActivity extends AppCompatActivity
             dbUtils.reduceMoney(spHelper.getUsername());
             Toast.makeText(mContext, "刷卡成功，消费1元 " + time_use, Toast.LENGTH_LONG).show();
 
+            if (push_data.isChecked())
+            {
+                Log.e(TAG, "isChecked");
+                listenMessage();
+//                Intent intenttest = new Intent(mContext, ClientActivity.class);
+//                startActivity(intenttest);
+
+            }
+            else
+            {
+                Log.e(TAG, "is NOT Checked");
+            }
+
             Log.e(TAG, readCardAPI.Name());
         }
         txt_nfc_tips.setVisibility(View.GONE);
@@ -354,5 +407,25 @@ public class NFCActivity extends AppCompatActivity
         long time;
         time = System.currentTimeMillis();
         return time;
+    }
+
+    private void listenMessage()
+    {
+        try
+        {
+            socket = new Socket(SERVER_IP, PORT);
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer.write(readCardAPI.Name() + readCardAPI.CardNo() + "\n");
+            writer.flush();
+            String data = null;
+//            if (reader.ready())
+//            {
+                data = reader.readLine();
+                Log.e(TAG, data + " from server");
+//            }
+
+        }catch (Exception e){e.printStackTrace();}
+
     }
 }

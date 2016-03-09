@@ -95,7 +95,7 @@
                         android:id="@+id/txt_idcardNation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="名  族:"
+                        android:text="民  族:"
                         android:layout_toRightOf="@id/img_head"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
@@ -275,10 +275,33 @@
                     android:layout_height="20px"
                     android:background="@color/colorLineBig" />
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <CheckBox
+                    android:id="@+id/checkbox_dataPush"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="推送"
+                    android:textColor="@color/colorFont"/>
+                <EditText
+                    android:id="@+id/edit_usernameOrPhoneNumber_dataPush"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_usernameOrPhoneNumber"
+                    android:textSize="14dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:singleLine="true"
+                    android:background="@drawable/edit_bg"
+                    android:textCursorDrawable="@drawable/cursor_style"
+                    android:visibility="gone"/>
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="150dp">
+                android:layout_height="130dp">
                 <TextView
                     android:id="@+id/txt_nfc_tips"
                     android:layout_width="wrap_content"
@@ -297,5 +320,5 @@
         android:text="请把身份证放置NFC感应区域"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp" />
+        android:layout_marginBottom="30dp" />
 </RelativeLayout>

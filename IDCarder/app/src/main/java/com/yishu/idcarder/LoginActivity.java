@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (user == null)
                     {
                         user = dbUtils.findByPhone(usernameOrPhoneNumber);
+                        Log.e(TAG,"phone login");
                         if (user == null) {
                             showWindowTips("用户名或手机未注册，请先注册");
                         } else
@@ -94,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 {
                                     intent = new Intent(mContext, NFCActivity.class);
                                     startActivity(intent);
-                                    spHelper.save(usernameOrPhoneNumber, password);
+                                    spHelper.save(user.getUsername(), password);
                                     finish();
                                 } else
                                 {

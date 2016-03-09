@@ -22,12 +22,13 @@
     <string name="title_register_personal">个人用户注册</string>
     <string name="title_register_enterprise">企业用户注册</string>
     <string name="title_mine">详细信息</string>
-    <string name="title_nfc">读卡</string>
+    <string name="title_nfc">读    卡</string>
     <string name="title_resetPW">修改密码</string>
     <string name="title_manageMember">系统成员管理</string>
     <string name="title_manageMember_add">添加系统成员</string>
     <string name="title_manageMember_delete">删除系统成员</string>
     <string name="forget_password"><u>忘记密码?</u></string>
     <string name="getValidateNumber"><u>获取验证码</u></string>
-    <string name="recharge">充值</string>
+    <string name="recharge">充    值</string>
+    <string name="hint_usernameOrPhoneNumber">用户名/手机</string>
 </resources>
