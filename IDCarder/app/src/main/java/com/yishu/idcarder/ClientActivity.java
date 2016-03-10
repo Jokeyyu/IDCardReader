@@ -45,6 +45,16 @@ public class ClientActivity extends AppCompatActivity implements View.OnClickLis
     private BufferedReader reader;
     private static final int PORT = 3535;
     private static final String TAG = "==ClientActivity===";
+    private String msgFrom = "12345678900";
+    private String msgTo = "12345678901";
+    private String name = "黄三";
+    private String gender = "男";
+    private String nation = "汉";
+    private String birth = "19800808";
+    private String IDCardAddress = "南京市雨花区软件大道180号大数据产业基地8栋409";
+    private String IDCardNumber = "156321477556214592";
+    private String department = "南京市公安局";
+    private String lifecycle = "20100305-20200305";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,28 +71,13 @@ public class ClientActivity extends AppCompatActivity implements View.OnClickLis
         {
             case R.id.btn_send :
             {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                }).start();
-
                 try
                 {
-                    writer.write("info from client " + ip + "\n");
+                    writer.write(msgFrom + "," + msgTo + "," + name + "," + gender + "," +   //
+                            nation + "," + birth + "," + IDCardAddress + "," +  //
+                            IDCardNumber + "," + department + "," + lifecycle + "\n");
                     writer.flush();
-                    String data = null;
-                    if (reader.ready())
-                    {
-                        data = reader.readLine();
-                        Log.e(TAG, "info from server ==>" + data);
-                    }
-//                    data = reader.readLine();
-//                    Log.e(TAG, "info from server ==>" + data);
                 }catch (Exception e){e.printStackTrace();}
-
-
             }
         }
     }
@@ -96,9 +91,9 @@ public class ClientActivity extends AppCompatActivity implements View.OnClickLis
 
     private void sendMessage()
     {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
                 try
                 {
                     socket = new Socket("192.168.1.32", PORT);
@@ -106,10 +101,23 @@ public class ClientActivity extends AppCompatActivity implements View.OnClickLis
                     ip = address.getHostAddress();
                     writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    writer.write(msgFrom + "," + msgTo + "," + name + "," + gender + "," +   //
+                            nation + "," + birth + "," + IDCardAddress + "," +  //
+                            IDCardNumber + "," + department + "," + lifecycle + "\n");
+                    writer.flush();
+//                    if (reader.ready())
+//                    {
+                        String data = null;
+                        while (true)
+                        {
+                            data = reader.readLine();
+                            Log.e(TAG, "info from server ==>" + data);
+                        }
+//                    }
 
                 }catch (Exception e){e.printStackTrace();}
-//            }
-//        }).start();
+            }
+        }).start();
 
 
     }
