@@ -1,13 +1,20 @@
 package com.yishu.idcarder;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/3/8.
@@ -21,6 +28,7 @@ public class DataPushServer
     private InetAddress address;
     private ArrayList<ClientThread> clientList = new ArrayList<ClientThread>();
     private ArrayList<Message> msgList = new ArrayList<Message>();
+//    private ArrayList<Picture> imgList = new ArrayList<Picture>();
 //    private Message msg;
 
 
@@ -47,6 +55,7 @@ public class DataPushServer
 //                ClientThread client = new ClientThread(socket, clientID);
                 ClientThread client = new ClientThread(socket);
                 clientList.add(client);
+                System.out.println("在线数量 ==> " + clientList.size());
                 clientID++;
                 client.start();
             }
@@ -66,18 +75,38 @@ public class DataPushServer
                         if (msgList.size() > 0)
                         {
                             Message msg = msgList.get(0);
+                            List listDel = new ArrayList();
                             for (ClientThread client : clientList)
                             {
-                                if (msg.get_to().equals(client.getPhoneNumber()))
+                                if (client.getTag().equals("quit"))
                                 {
-                                    client.getWriter().write(msg.get_from() + "," + msg.get_to() + "," + msg.getName() + "," + msg.getGender() + "," +   //
-                                            msg.getNation() + "," + msg.getBirth() + "," + msg.getIDCardAddress() + "," +  //
-                                            msg.getIDCardNumber() + "," + msg.getDepartment() + "," + msg.getLifecycle() + "\n");
-                                    client.getWriter().flush();
-                                    System.out.println("send message " + msg.getName());
-                                    break;
+//                                    client.interrupt();
+//                                    client.join();
+//                                    clientList.remove(client);
+                                    listDel.add(client);
+                                }
+                                else
+                                {
+//                                    System.out.println(msg._to + "==>" + client.getPhoneNumber());
+                                    if (msg.get_to().equals(client.getPhoneNumber()))
+                                    {
+                                        System.out.println("在线数量 ==> " + clientList.size());
+                                        client.getWriter().write(msg.get_from() + "," + msg.get_to() + "," + msg.getName() + "," + msg.getGender() + "," +   //
+                                                msg.getNation() + "," + msg.getBirth() + "," + msg.getIDCardAddress() + "," +  //
+                                                msg.getIDCardNumber() + "," + msg.getDepartment() + "," + msg.getLifecycle() + "," + "\n");//
+//                                                new String(msg.getImg_head(), 0, msg.getImg_head().length) + "\n");
+                                        client.getWriter().flush();
+                                        System.out.println("send message " + msg.getName());
+                                        break;
+                                    }
                                 }
                             }
+                            clientList.removeAll(listDel);
+//                            if (clientList.size() == 0)
+//                            {
+//                                clientList.add(new ClientThread("auto_created"));
+//                            }
+                            System.out.println("在线数量 ==> " + clientList.size());
                             msgList.remove(0);
                         }
                         Thread.sleep(200);
@@ -190,6 +219,19 @@ public class DataPushServer
         public void setLifecycle(String lifecycle) {
             this.lifecycle = lifecycle;
         }
+
+    }
+    public class Picture
+    {
+        private byte[] img_head ;
+
+        public byte[] getImg_head() {
+            return img_head;
+        }
+
+        public void setImg_head(byte[] img_head) {
+            this.img_head = img_head;
+        }
     }
 
     //add a new thread to receive data from client and every new client gets one own thread
@@ -200,6 +242,15 @@ public class DataPushServer
         private BufferedReader reader;
         private Socket socket;
         private String phoneNumber;
+        private String tag; //if tag equals quit,the current thread will be killed.
+        private DataInputStream dataInput;
+        private DataOutputStream dataOutput;
+        private byte[] img_head = new byte[1024];
+
+        public ClientThread(String tag)
+        {
+            this.tag = tag;
+        };
         public ClientThread(Socket socket, int clientID)
         {
             this.socket = socket;
@@ -243,18 +294,31 @@ public class DataPushServer
             this.phoneNumber = phoneNumber;
         }
 
+        public String getTag() {
+            return tag;
+        }
+
+        public void setTag(String tag) {
+            this.tag = tag;
+        }
+
         @Override
         public void run() {
             super.run();
             try
             {
+
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-//                msg = new Message(_to);
+//                dataInput = new DataInputStream(socket.getInputStream());
+//                dataOutput = new DataOutputStream(socket.getOutputStream());
+//                receivePicture();
+
+                String dataFromClient = null;
+//                writeFile();
                 while (isServerStart)
                  {
-                    String dataFromClient = null;
-                     if (reader.ready())
+                    if (reader.ready())
                     {
                         dataFromClient = reader.readLine();
                         Message msg = new Message();
@@ -272,6 +336,8 @@ public class DataPushServer
                         String IDCardNumber = dataSplit[7];
                         String department = dataSplit[8];
                         String lifecycle = dataSplit[9];
+                        tag = dataSplit[10];
+//                        byte[] img_head = dataSplit[11].getBytes();
                         msg.set_from(_from);
                         msg.set_to(_to);
                         msg.setName(name);
@@ -282,12 +348,76 @@ public class DataPushServer
                         msg.setIDCardNumber(IDCardNumber);
                         msg.setDepartment(department);
                         msg.setLifecycle(lifecycle);
+//                        msg.setImg_head(img_head);
                         msgList.add(msg);
+//                        writeFile(msg);
 //                        System.out.println(msg.getName() + "==>");
                     }
                      Thread.sleep(100);
                 }
             }catch (Exception e){e.printStackTrace();}
         }
+        public void receivePicture()
+        {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try
+                    {
+                        dataInput = new DataInputStream(socket.getInputStream());
+                        dataOutput = new DataOutputStream(socket.getOutputStream());
+//                        int length = 0;
+//                        while ((length = dataInput.read(img_head, 0, img_head.length)) > 0)
+//                        {
+//                            dataOutput.write(img_head,0, length);
+//                            dataOutput.flush();
+//                        }
+                        writeFile();
+                    }catch (Exception e){e.printStackTrace();}
+
+                }
+            }).start();
+        }
+        public void writeFile()
+        {
+            try
+            {
+                File file = new File("D:/tempIDCard");
+                if (!file.exists())
+                {
+                    file.mkdirs();
+                    System.out.println("dir is created");
+                }
+                File jpg = new File(file, "1.jpg");
+                if (!jpg.exists())
+                {
+                    jpg.createNewFile();
+                }
+//                Log.e(TAG,"path ==> " + Environment.getExternalStorageDirectory());
+                FileOutputStream fos = new FileOutputStream(jpg);
+                int length = 0;
+                while ((length = dataInput.read(img_head)) > 0)
+                {
+//                    dataInput.read(img_head, 0, img_head.length);
+                    dataOutput.write(img_head,0, length);
+                    dataOutput.flush();
+                    fos.write(img_head, 0, length);
+                    fos.flush();
+                    System.out.println("====" + length);
+                }
+//                System.out.println("save pic successfully===");
+//                dataOutput.flush();
+//                fos.flush();
+//                fos.write(img_head, 0, img_head.length);
+//                fos.flush();
+                fos.close();
+                System.out.println("save pic successfully");
+            }catch (Exception e){e.printStackTrace();}
+        }
+        public void sendPicture()
+        {
+
+        }
     }
+
 }

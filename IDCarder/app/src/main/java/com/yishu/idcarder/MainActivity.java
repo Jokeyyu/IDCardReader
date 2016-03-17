@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                appManager.finishAll();
                 NFCActivity.instance.finish();
                 finish();
+//                System.exit(0);
                 break;
             }
             case R.id.txt_recharge :

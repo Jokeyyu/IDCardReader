@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcB;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 //import android.os.Parcelable;
@@ -33,8 +34,11 @@ import com.otg.idcard.OTGReadCardAPI;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -84,6 +88,9 @@ public class NFCActivity extends AppCompatActivity
 
 
     private static final String TAG = "=====NFCActivity======";
+    private static final String QUIT = "quit";
+    private static final String START = "start";
+    private static final String RUNNING = "running";
     private long exitTime = 0;
 
     private IntentFilter tagDetected = null;
@@ -104,6 +111,7 @@ public class NFCActivity extends AppCompatActivity
     private String IDCardNumber;
     private String department;
     private String lifecycle;
+    private byte[] img_IDCardHead;
     private InetAddress address;
     private String ip;
 //    public NFCActivity(Context context, OTGReadCardAPI readCardAPI)
@@ -268,7 +276,7 @@ public class NFCActivity extends AppCompatActivity
             else
             {
                 finish();
-                System.exit(0);
+//                System.exit(0);
             }
             return true;
         }
@@ -348,6 +356,10 @@ public class NFCActivity extends AppCompatActivity
             IDCardNumber = readCardAPI.CardNo();
             department = readCardAPI.Police();
             lifecycle = readCardAPI.Activity();
+            img_IDCardHead = readCardAPI.GetImage();
+            Log.e(TAG, "img byte stream==> " + img_IDCardHead.length);
+
+
             txt_idcardName_value.setText(name);
             txt_idcardGender_vlaue.setText(gender);
             txt_idcardNation_value.setText(nation);
@@ -356,16 +368,37 @@ public class NFCActivity extends AppCompatActivity
             txt_idcardNumber_value.setText(IDCardNumber);
             txt_idcardDepartment_value.setText(department);
             txt_idcardLifecycle_value.setText(lifecycle);
-            img_head.setImageBitmap(Bytes2Bimap(readCardAPI.GetImage()));
+            img_head.setImageBitmap(Bytes2Bimap(img_IDCardHead));
 
             time_use = System.currentTimeMillis() - time_use;
+
+//            try
+//            {
+//                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/tempIDCard");
+//                if (!file.exists())
+//                {
+//                    file.mkdirs();
+//                    System.out.println("dir is created");
+//                }
+//                File jpg = new File(file, "img_head.jpg");
+//                if (!jpg.exists())
+//                {
+//                    jpg.createNewFile();
+//                }
+////                Log.e(TAG,"path ==> " + Environment.getExternalStorageDirectory());
+//                FileOutputStream fos = new FileOutputStream(jpg);
+//                byte[] inputByte = img_IDCardHead;
+//                fos.write(inputByte);
+//                fos.flush();
+//                fos.close();
+//                System.out.println("save pic successfully");
+//            }catch (Exception e){e.printStackTrace();}
 
 //            myDBHelper = new MyDBHelper(mContext, "idCardReader.db", null, 1);
 //            dbUtils = new SQLiteDatabaseUtils(myDBHelper);
 
 //            Log.e(TAG, spHelper.getUsername());
             dbUtils.reduceMoney(spHelper.getUsername());
-//            Toast.makeText(mContext, "刷卡成功，消费1元 " + time_use, Toast.LENGTH_LONG).show();
 
             if (push_data.isChecked())
             {
@@ -380,7 +413,7 @@ public class NFCActivity extends AppCompatActivity
                     {
                         writer.write(msgFrom + "," + msgTo + "," + name + "," + gender + "," +   //
                                 nation + "," + birth + "," + IDCardAddress + "," +  //
-                                IDCardNumber + "," + department + "," + lifecycle + "\n");
+                                IDCardNumber + "," + department + "," + lifecycle + "," + RUNNING + "\n");
                         writer.flush();
                     }catch (Exception e){e.printStackTrace();}
                 }
@@ -392,6 +425,7 @@ public class NFCActivity extends AppCompatActivity
             }
             else
             {
+                Toast.makeText(mContext, "刷卡成功，消费1元 " + time_use, Toast.LENGTH_LONG).show();
                 Log.e(TAG, "is NOT Checked");
             }
 
@@ -470,14 +504,14 @@ public class NFCActivity extends AppCompatActivity
             @Override
             public void run() {
                 try {
-                    socket = new Socket("192.168.1.32", PORT);
+                    socket = new Socket("192.168.1.49", PORT);
                     address = InetAddress.getLocalHost();
                     ip = address.getHostAddress();
                     writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     writer.write(msgFrom + "," + msgTo + "," + name + "," + gender + "," +   //
                             nation + "," + birth + "," + IDCardAddress + "," +  //
-                            IDCardNumber + "," + department + "," + lifecycle + "\n");
+                            IDCardNumber + "," + department + "," + lifecycle + "," + START + "\n");
                     writer.flush();
 //                    if (reader.ready())
 //                    {
@@ -507,5 +541,17 @@ public class NFCActivity extends AppCompatActivity
                 }
             }
         }).start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy()");
+        try {
+            writer.write(msgFrom + "," + msgTo + "," + name + "," + gender + "," +   //
+                    nation + "," + birth + "," + IDCardAddress + "," +  //
+                    IDCardNumber + "," + department + "," + lifecycle + "," + QUIT + "\n");
+            writer.flush();
+        }catch (Exception e){e.printStackTrace();}
     }
 }
