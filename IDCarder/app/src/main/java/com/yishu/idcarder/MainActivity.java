@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView txt_usernameM;
     private TextView txt_money;
     private TextView txt_changePW;
-    private TextView txt_deleteMember;
+//    private TextView txt_deleteMember;
     private TextView txt_viewMember;
     private TextView txt_userTag_personalM;
     private TextView txt_userTag_enterpriseM;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (user.getTag().equals("0"))
         {
             txt_userTag_enterpriseM.setVisibility(View.VISIBLE);
-            txt_deleteMember.setVisibility(View.VISIBLE);
+//            txt_deleteMember.setVisibility(View.VISIBLE);
             txt_viewMember.setVisibility(View.VISIBLE);
         }
         else
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txt_recharge = (TextView) findViewById(R.id.txt_recharge);
         txt_money = (TextView) findViewById(R.id.txt_money);
         txt_changePW = (TextView) findViewById(R.id.txt_change_password);
-        txt_deleteMember = (TextView) findViewById(R.id.txt_deleteMemberM);
+//        txt_deleteMember = (TextView) findViewById(R.id.txt_deleteMemberM);
         txt_viewMember = (TextView) findViewById(R.id.txt_viewMemberM);
         txt_userTag_personalM = (TextView) findViewById(R.id.txt_userTag_PersonalM);
         txt_userTag_enterpriseM = (TextView) findViewById(R.id.txt_userTag_EnterpriseM);
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_logout.setOnClickListener(this);
         txt_recharge.setOnClickListener(this);
         txt_changePW.setOnClickListener(this);
-        txt_deleteMember.setOnClickListener(this);
+//        txt_deleteMember.setOnClickListener(this);
         txt_viewMember.setOnClickListener(this);
 //        txt_idCardReader.setOnClickListener(this);
 //        txt_settings.setOnClickListener(this);
@@ -189,12 +189,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             }
-            case R.id.txt_deleteMemberM :
-            {
-                Intent intent = new Intent(mContext, MemberDeleteActivity.class);
-                startActivity(intent);
-                break;
-            }
+//            case R.id.txt_deleteMemberM :
+//            {
+//                Intent intent = new Intent(mContext, MemberDeleteActivity.class);
+//                startActivity(intent);
+//                break;
+//            }
 //            case R.id.txt_idCardReader :
 ////                fragment_nfc = new NFCFragment();
 ////                fm.beginTransaction().replace(R.id.layout_content, fragment_nfc).commit();

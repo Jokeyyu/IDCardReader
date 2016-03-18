@@ -78,6 +78,7 @@ public class MemberAddActivity extends AppCompatActivity implements View.OnClick
                             else
                             {
                                 dbUtils.changeInfo("affiliate", affiliate, user.getUsername());
+                                edit_usernameOrPhoneNumber_addM.setText("");
                                 showWindowTips("添加成功");
                             }
                         }
@@ -95,6 +96,7 @@ public class MemberAddActivity extends AppCompatActivity implements View.OnClick
                         else
                         {
                             dbUtils.changeInfo("affiliate", affiliate, user.getUsername());
+                            edit_usernameOrPhoneNumber_addM.setText("");
                             showWindowTips("添加成功");
                         }
                     }

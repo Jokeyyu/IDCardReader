@@ -49,25 +49,27 @@
                 android:id="@+id/member_list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
+                android:orientation="vertical">
                 <!--<TextView-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="James"-->
-                <!--android:paddingTop="10dp"-->
-                <!--android:paddingBottom="10dp" />-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="James"-->
+                    <!--android:paddingTop="20px"-->
+                    <!--android:paddingBottom="20px"-->
+                    <!--android:paddingLeft="30px"-->
+                    <!--android:paddingRight="30px"/>-->
                 <!--<TextView-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="1px"-->
-                <!--android:background="@color/colorLineGray" />-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="1px"-->
+                    <!--android:background="@color/colorLineGray"-->
+                    <!--android:layout_marginLeft="30px"-->
+                    <!--android:layout_marginRight="30px"/>-->
                 <!--<TextView-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="James"-->
-                <!--android:paddingTop="10dp"-->
-                <!--android:paddingBottom="10dp" />-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="James"-->
+                    <!--android:paddingTop="10dp"-->
+                    <!--android:paddingBottom="10dp" />-->
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
@@ -94,11 +96,28 @@
                 android:src="@drawable/add02"
                 android:background="@drawable/add_could_change"/>
             <TextView
+                android:id="@+id/txt_addMember"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="添加成员"
                 android:gravity="center"
                 android:textSize="8dp"/>
+
+            <ImageView
+                android:id="@+id/img_delMember_list"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/add02"
+                android:background="@drawable/delete_could_change"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/txt_delMember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除成员"
+                android:gravity="center"
+                android:textSize="8dp"
+                android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>

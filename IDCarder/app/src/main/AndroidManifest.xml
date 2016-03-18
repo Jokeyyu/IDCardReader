@@ -90,6 +90,10 @@
             android:name=".ClientActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".TestActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

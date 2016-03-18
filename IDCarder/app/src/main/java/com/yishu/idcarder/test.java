@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 /**
  * Created by Administrator on 2016/3/17.
  */
-public class test {
+public class TEST {
     public static void main(String[] args)
     {
         try

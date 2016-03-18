@@ -78,7 +78,7 @@ public class ClientActivity extends AppCompatActivity implements View.OnClickLis
 
         bindViews();
 //        sendMessage();
-        sendPicture();
+//        sendPicture();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ClientActivity extends AppCompatActivity implements View.OnClickLis
         btn_send = (Button) findViewById(R.id.btn_send);
         img_test = (ImageView) findViewById(R.id.testPIC);
 
-        btn_send.setOnClickListener(this);
+//        btn_send.setOnClickListener(this);
     }
 
     private void sendMessage()
