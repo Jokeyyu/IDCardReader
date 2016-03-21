@@ -85,24 +85,24 @@ public class ClientActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.btn_send :
-            {
-                try
-                {
-                    writer.write(msgFrom + "," + msgTo + "," + name + "," + gender + "," +   //
-                            nation + "," + birth + "," + IDCardAddress + "," +  //
-                            IDCardNumber + "," + department + "," + lifecycle  + "\n");
-//                    writer.e
-                    writer.flush();
-                }catch (Exception e){e.printStackTrace();}
-            }
+//            case R.id.btn_send :
+//            {
+//                try
+//                {
+//                    writer.write(msgFrom + "," + msgTo + "," + name + "," + gender + "," +   //
+//                            nation + "," + birth + "," + IDCardAddress + "," +  //
+//                            IDCardNumber + "," + department + "," + lifecycle  + "\n");
+////                    writer.e
+//                    writer.flush();
+//                }catch (Exception e){e.printStackTrace();}
+//            }
         }
     }
 
     private void bindViews()
     {
-        btn_send = (Button) findViewById(R.id.btn_send);
-        img_test = (ImageView) findViewById(R.id.testPIC);
+//        btn_send = (Button) findViewById(R.id.btn_send);
+//        img_test = (ImageView) findViewById(R.id.testPIC);
 
 //        btn_send.setOnClickListener(this);
     }

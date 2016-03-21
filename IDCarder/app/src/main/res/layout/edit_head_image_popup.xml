@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorLineGray">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:id="@+id/txt_gallery_popup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="相册选取"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/txt_could_change"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/colorLineGray" />
+        <TextView
+            android:id="@+id/txt_takePhoto_popup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="拍照"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/txt_could_change"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
+</LinearLayout>

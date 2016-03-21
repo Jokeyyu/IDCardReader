@@ -14,7 +14,7 @@
         android:paddingTop="10dp"
         android:paddingLeft="10dp"
         android:textColor="@color/colorBlack"
-        android:background="@drawable/txt_could_change"/>
+        android:background="@drawable/txt_could_change" />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="1px"

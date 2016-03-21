@@ -264,7 +264,9 @@ public class MemberViewActivity extends AppCompatActivity implements View.OnClic
             }
         });
         popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+
         popupWindow.showAsDropDown(v);
+//        popupWindow.showAtLocation(findViewById(R.id.activity_view_member), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
         txt_username = (TextView) v;
         username = txt_username.getText().toString();
 
