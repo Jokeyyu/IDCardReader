@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 //import android.nfc.NfcAdapter;
 import android.graphics.drawable.ClipDrawable;
@@ -14,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 //import android.util.Log;
@@ -32,7 +35,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 //import com.otg.idcard.OTGReadCardAPI;
 
@@ -57,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyDBHelper myDBHelper;
     private Users user;
     private String username;
+    private Bitmap photo;
 //    private AppManager appManager;
 //    private TextView txt_info;
 //    private TextView txt_mine;
@@ -71,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int CAMERA_REQUEST_CODE = 1;
     private static final int RESIZE_REQUEST_CODE = 2;
     private static final String IMAGE_FILE_NAME = "head.jpg";
+    private static final int MSG_SET_IMAGE = 0x001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +159,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         user = dbUtils.find(username);
         Log.e(TAG, username + " " + user.getEnterprise_name() + " " + user.getTag() + " " + user.getAffiliate() + " " + user.getMoney());
         txt_money.setText(String.valueOf(user.getMoney()));
+
+        File img = new File(Environment.getExternalStorageDirectory(), spHelper.getUsername() + ".jpg");
+        if (img.exists())
+        {
+            try
+            {
+                FileInputStream fis = new FileInputStream(img);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                byte[] tempData = new byte[1024];
+                int length = 0;
+                byte[] data;
+                while ((length = fis.read(tempData, 0, tempData.length)) != -1)
+                {
+                    bos.write(tempData, 0, length);
+                }
+                bos.close();
+                fis.close();
+                img_headM.setImageBitmap(BitmapFactory.decodeByteArray(bos.toByteArray(), 0, bos.toByteArray().length));
+            }catch (Exception e){e.printStackTrace();}
+        }
     }
 
     @Override
@@ -164,9 +193,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.img_headM :
             {
-//                Intent intent = new Intent(mContext, TestActivity.class);
-//                startActivity(intent);
-                showEditHeadPicPopupWindow();
+                Intent intent = new Intent(mContext, TestActivity.class);
+                startActivity(intent);
+//                showEditHeadPicPopupWindow();
                 break;
             }
             case R.id.btn_logout :
@@ -317,9 +346,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, getImgUri());
                     startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(mContext, "没有找到SD卡", Toast.LENGTH_SHORT).show();
                 }
                 popupWindow.dismiss();
@@ -346,8 +373,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Bundle extras = data.getExtras();
         if (extras != null)
         {
-            Bitmap photo = (Bitmap) extras.get("data");
-            img_headM.setImageBitmap(photo);
+            photo = (Bitmap) extras.get("data");
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try
+            {
+                photo.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                byte[] data_ = bos.toByteArray();
+                bos.close();
+                File img = new File(Environment.getExternalStorageDirectory(), spHelper.getUsername() + ".jpg");
+                if (!img.exists()) {
+                    img.createNewFile();
+                }
+                FileOutputStream os = new FileOutputStream(img);
+                os.write(data_, 0, data_.length);
+                os.flush();
+                os.close();
+//                Log.e("00000", "0000");
+            }catch (Exception e){e.printStackTrace();}
+
+            handler.sendEmptyMessage(MSG_SET_IMAGE);
+
         }
     }
     private Uri getImgUri()
@@ -366,9 +411,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         }
     }
+
+    private final Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case MSG_SET_IMAGE:
+                {
+                    img_headM.setImageBitmap(photo);
+                    break;
+                }
+            }
+        }
+    };
     private void showTips(String tips)
     {
         Toast.makeText(mContext, tips, Toast.LENGTH_SHORT).show();
     }
-
 }

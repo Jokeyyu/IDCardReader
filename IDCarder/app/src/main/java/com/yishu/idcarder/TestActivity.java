@@ -3,23 +3,40 @@ package com.yishu.idcarder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by Administrator on 2016/3/18.
@@ -27,12 +44,16 @@ import java.io.File;
 public class TestActivity extends AppCompatActivity implements View.OnClickListener
 {
     private Context mContext;
-    private ImageView img_header;
-
-    private static final int IMAGE_REQUEST_CODE = 0;
-    private static final int CAMERA_REQUEST_CODE = 1;
-    private static final int RESIZE_REQUEST_CODE = 2;
-    private static final String IMAGE_FILE_NAME = "header.jpg";
+    private static RequestQueue queue;
+    private ImageView img_test;
+    private TextView txt_html;
+    private Bitmap image;
+    private String html_content;
+    private static final String TAG = "===TestActivity===";
+    private static final String PIC_URL = "http://192.168.1.10:8080/EmployeePro/pic/tomcat.png";
+    private static final String HTML_URL = "http://192.168.1.10:8080/EmployeePro/";
+    private static final int MSG_LOAD_PICTURE = 0;
+    private static final int MSG_LOAD_HTML = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,136 +61,133 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         mContext = getApplicationContext();
         bindViews();
+
+        queue = Volley.newRequestQueue(mContext);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.btn_header_pickImg :
+            case R.id.btn_send :
             {
-//                Intent pickImgIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
-//                pickImgIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                Intent pickImgIntent = new Intent(Intent.ACTION_PICK, null);
+                StringRequest stringRequest = new StringRequest("http://www.baidu.com",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String s) {
+                                Log.e(TAG, s);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            Log.e(TAG, volleyError.getMessage(), volleyError);
+                        }
+                    });
+                queue.add(stringRequest);
+                break;
+            }
+            case R.id.btn_load :
+            {
+                try
+                {
 
-                pickImgIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-//                pickImgIntent.setType("image/*");
-                startActivityForResult(pickImgIntent, IMAGE_REQUEST_CODE);
-                break;
-            }
-            case R.id.btn_header_takePhoto :
-            {
-                if (isSDCardExisting())
-                {
-//                    Intent cameraIntent = new Intent("android.media.action.IMAGE_CAPTURE");
-                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
-                    cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-                }
-                else
-                {
-                    Toast.makeText(mContext, "没有找到SD卡", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
-            default:
-            {
-                break;
+                    image = BitmapFactory.decodeByteArray(getImage(PIC_URL), 0, getImage(PIC_URL).length);
+//                    upLoadImage(PIC_URL);
+                    handler.sendEmptyMessage(MSG_LOAD_PICTURE);
+//                    html_content = getHtml(HTML_URL);
+//                    handler.sendEmptyMessage(MSG_LOAD_HTML);
+
+                }catch (Exception e){e.printStackTrace();}
+
             }
         }
-
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (resultCode != RESULT_OK)
-        {
-            return;
-        }
-        else
-        {
-            switch (requestCode)
-            {
-                case IMAGE_REQUEST_CODE :
-                {
-                    resizeImage(data.getData());
-                    break;
-                }
-                case CAMERA_REQUEST_CODE :
-                {
-                    if (isSDCardExisting())
-                    {
-                        resizeImage(getImageUri());
-                    }
-                    else
-                    {
-                        Toast.makeText(mContext, "未找到存储卡，无法存储照片！",
-                                Toast.LENGTH_LONG).show();
-                    }
-                    break;
-                }
-                case RESIZE_REQUEST_CODE :
-                {
-                    if (data != null)
-                    {
-                        showResizeImg(data);
-                    }
-                    break;
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void bindViews()
     {
-        img_header = (ImageView) findViewById(R.id.img_head_test);
-        Button btn_header_pickImg = (Button) findViewById(R.id.btn_header_pickImg);
-        Button btn_header_takePhoto = (Button) findViewById(R.id.btn_header_takePhoto);
+        img_test = (ImageView) findViewById(R.id.img_test);
+        txt_html = (TextView) findViewById(R.id.test_html);
 
-        btn_header_pickImg.setOnClickListener(this);
-        btn_header_takePhoto.setOnClickListener(this);
-
+        findViewById(R.id.btn_send).setOnClickListener(this);
+        findViewById(R.id.btn_load).setOnClickListener(this);
     }
-    private boolean isSDCardExisting()
+
+    private static byte[] getImage(String path) throws IOException
     {
-        final String _state = Environment.getExternalStorageState();
-        if (_state.equals(Environment.MEDIA_MOUNTED))
+        URL url = new URL(path);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(5000);
+        conn.setRequestMethod("GET");
+        if (conn.getResponseCode() != 200)
         {
-            return true;
+            throw new RuntimeException("request failed...");
         }
-        else {
-            return false;
-        }
+        InputStream is = conn.getInputStream();
+        byte[] bt = StreamTool.read(is);
+        is.close();
+        return bt;
     }
-    private void resizeImage(Uri uri)
+    private void upLoadImage(String path) throws IOException
     {
-        Intent intent = new Intent("com.android.camera.action.CROP");   //com.android.camera.action.
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", 100);
-        intent.putExtra("outputY", 100);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, RESIZE_REQUEST_CODE);
-    }
-    private void showResizeImg(Intent data)
-    {
-
-        Bundle extras = data.getExtras();
-        if (extras != null)
+        URL url = new URL(path);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(5000);
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setRequestMethod("POST");
+        conn.setUseCaches(false);
+        conn.setRequestProperty("Connection", "Keep-Alive");
+        conn.setRequestProperty("Charset", "UTF-8");
+        OutputStream os = conn.getOutputStream();
+        File img = new File(Environment.getExternalStorageDirectory(), "Marry0.jpg");
+        FileInputStream fis = new FileInputStream(img);
+        int length = 0;
+        byte[] data = new byte[1024];
+        while ((length = fis.read(data, 0, data.length)) != -1)
         {
-            Bitmap photo = (Bitmap) extras.get("data");
-//            Bitmap photo = extras.getParcelable("data");
-//            Drawable drawable = new BitmapDrawable(photo);
-            img_header.setImageBitmap(photo);
-//            img_header.setImageURI(getImageUri());
+            os.write(data, 0, length);
+
         }
+        os.flush();
+        os.close();
+        fis.close();
+        Log.e(TAG, "upload successful");
+
     }
-    private Uri getImageUri()
+    private static String getHtml(String path) throws IOException
     {
-        return Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME));
+        URL url = new URL(path);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(5000);
+        conn.setRequestMethod("GET");
+        if (conn.getResponseCode() == 200)
+        {
+            InputStream is = conn.getInputStream();
+            byte[] data = StreamTool.read(is);
+            String html = new String(data, "UTF-8");
+            return html;
+        }
+        return null;
     }
+    private final Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case MSG_LOAD_PICTURE :
+                {
+                    img_test.setImageBitmap(image);
+                    Log.e(TAG,"load picture successful");
+                    break;
+                }
+                case MSG_LOAD_HTML :
+                {
+                    txt_html.setText(html_content);
+                    Log.e(TAG, "load html successful");
+                    break;
+                }
+            }
+        }
+    };
 }

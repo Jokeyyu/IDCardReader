@@ -25,7 +25,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile files('libs/ysidcard.jar')
-//    compile(name:'nfcidreader-debug2',ext:'aar')
+    //    compile(name:'nfcidreader-debug2',ext:'aar')
+    compile files('libs/servlet-api-6.0.20.jar')
+    compile files('libs/volley.jar')
 }
 
 repositories {
