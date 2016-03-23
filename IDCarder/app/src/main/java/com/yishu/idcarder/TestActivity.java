@@ -50,8 +50,11 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private Bitmap image;
     private String html_content;
     private static final String TAG = "===TestActivity===";
-    private static final String PIC_URL = "http://192.168.1.10:8080/EmployeePro/pic/tomcat.png";
-    private static final String HTML_URL = "http://192.168.1.10:8080/EmployeePro/";
+//    private static final String PIC_URL = "http://192.168.1.10:8080/EmployeePro/pic/tomcat.png";
+//private static final String HTML_URL = "http://192.168.1.10:8080/EmployeePro/";
+    private static final String PIC_URL = "http://192.168.1.10:8080/Picture/UploadPicServlet";
+    private static final String HTML_URL = "http://192.168.1.10:8080/Picture/UploadPicServlet";
+
     private static final int MSG_LOAD_PICTURE = 0;
     private static final int MSG_LOAD_HTML = 1;
     @Override
@@ -91,9 +94,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 try
                 {
 
-                    image = BitmapFactory.decodeByteArray(getImage(PIC_URL), 0, getImage(PIC_URL).length);
-//                    upLoadImage(PIC_URL);
-                    handler.sendEmptyMessage(MSG_LOAD_PICTURE);
+//                    image = BitmapFactory.decodeByteArray(getImage(PIC_URL), 0, getImage(PIC_URL).length);
+                    upLoadImage(PIC_URL);
+//                    handler.sendEmptyMessage(MSG_LOAD_PICTURE);
 //                    html_content = getHtml(HTML_URL);
 //                    handler.sendEmptyMessage(MSG_LOAD_HTML);
 
@@ -128,17 +131,42 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void upLoadImage(String path) throws IOException
     {
+        String boundary ="*****";
         URL url = new URL(path);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setReadTimeout(5000);
         conn.setConnectTimeout(5000);
         conn.setDoOutput(true);
         conn.setDoInput(true);
-        conn.setRequestMethod("POST");
         conn.setUseCaches(false);
         conn.setRequestProperty("Connection", "Keep-Alive");
         conn.setRequestProperty("Charset", "UTF-8");
+        conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
         OutputStream os = conn.getOutputStream();
+
         File img = new File(Environment.getExternalStorageDirectory(), "Marry0.jpg");
+        String PREFIX = "--", LINE_END = "\r\n";
+        String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+        String BOUNDARY ="*****";
+        String CHARSET = "utf-8";
+        StringBuffer sb = new StringBuffer();
+        sb.append(PREFIX);
+        sb.append(BOUNDARY);
+        sb.append(LINE_END);
+        /**
+         * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
+         * filename是文件的名字，包含后缀名的 比如:abc.png
+         */
+
+        sb.append("Content-Disposition: form-data; name=\"img\"; filename=\""
+                + img.getName() + "\"" + LINE_END);
+        sb.append("Content-Type: application/octet-stream; charset="
+                + CHARSET + LINE_END);
+        sb.append(LINE_END);
+        os.write(sb.toString().getBytes());
+
+//        File img = new File(Environment.getExternalStorageDirectory(), "Marry0.jpg");
         FileInputStream fis = new FileInputStream(img);
         int length = 0;
         byte[] data = new byte[1024];
@@ -147,9 +175,18 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             os.write(data, 0, length);
 
         }
+        fis.close();
+        os.write(LINE_END.getBytes());
+        byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
+                .getBytes();
+        os.write(end_data);
         os.flush();
         os.close();
-        fis.close();
+
+        if (conn.getResponseCode() != 200)
+        {
+            throw new RuntimeException("request failed...");
+        }
         Log.e(TAG, "upload successful");
 
     }
