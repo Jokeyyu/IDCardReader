@@ -20,6 +20,8 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 //import android.util.Log;
+import android.transition.Transition;
+import android.transition.TransitionValues;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
